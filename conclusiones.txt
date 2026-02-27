@@ -1,0 +1,16 @@
+HALLAZGOS Y CONCLUSIONES DEL EJERCICIO
+
+1. Análisis de Entradas (Inputs):
+- Ambos endpoints (/signup y /login) reciben un body en formato JSON con la misma estructura: {"username": "valor", "password": "valor"}.
+- No se requieren Headers de autorización previos para consumir estos servicios.
+
+2. Análisis de Salidas (Outputs):
+- Creación exitosa (/signup): Retorna un string vacío ("") y no un JSON estructurado.
+- Login exitoso (/login): Retorna un string que contiene "Auth_token: [token]".
+- Errores de negocio: Retornan un objeto JSON con la clave "errorMessage" (ej. "This user already exist." o "Wrong password.").
+
+3. Hallazgos técnicos y buenas prácticas (Anomalías detectadas en el API):
+- Códigos de Estado HTTP: La API de Demoblaze tiene un comportamiento atípico en su diseño REST. Retorna siempre un código HTTP 200 (OK), incluso cuando hay errores (como contraseña incorrecta o usuario duplicado). Las buenas prácticas REST dictan que deberían usarse códigos de la familia 4XX (ej. 401 Unauthorized para login fallido, 409 Conflict para usuario duplicado). Por esto, las aserciones en Karate se basan en el cuerpo de la respuesta (response.errorMessage) y no en el código de estado (status).
+
+4. Conclusión de la automatización:
+- Karate Framework demostró ser altamente eficiente para realizar aserciones rápidas sobre APIs con comportamientos atípicos, permitiendo encriptar toda la lógica en el archivo .feature sin necesidad de programar en Java el manejo de las peticiones HTTP.
