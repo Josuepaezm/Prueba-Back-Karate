@@ -7,4 +7,5 @@ class PaginaTest {
     Karate testPagina() {
         return Karate.run("pagina").relativeTo(getClass());
     }
+
 }

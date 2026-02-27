@@ -12,30 +12,28 @@ Feature: Pruebas de API de Registro y Login para Demoblaze
     And request { username: '#(randomUser)', password: '#(defaultPassword)' }
     When method POST
     Then status 200
-    # Demoblaze retorna un string vacío "" cuando la creación es exitosa
+    And print 'string vacío cuando la creación es exitosa'
     And print 'Respuesta de creación exitosa: ', response
 
   Scenario: 2. Intentar crear un usuario ya existente
-    # Primero nos aseguramos de crear el usuario (por si no existe en la base de datos)
     Given path 'signup'
     And request { username: '#(existingUser)', password: '#(defaultPassword)' }
     When method POST
-
-    # Ahora intentamos crearlo de nuevo para forzar el error
+    And print 'Ahora intentamos crearlo de nuevo para forzar el error'
     Given path 'signup'
     And request { username: '#(existingUser)', password: '#(defaultPassword)' }
     When method POST
     Then status 200
     And match response.errorMessage == 'This user already exist.'
-    And print 'Respuesta de usuario existente: ', response
+    And print 'Respuesta de usuario ya existente: ', response
 
   Scenario: 3. Usuario y password correcto en login
-    # Inciamos sesión con el usuario garantizado en el escenario anterior
     Given path 'login'
     And request { username: '#(existingUser)', password: '#(defaultPassword)' }
     When method POST
     Then status 200
     And match response contains 'Auth_token:'
+    And print ' SESION INICIADA YA QUE GENERA TOKEN '
     And print 'Token de acceso generado: ', response
 
   Scenario: 4. Usuario y password incorrecto en login
@@ -44,4 +42,5 @@ Feature: Pruebas de API de Registro y Login para Demoblaze
     When method POST
     Then status 200
     And match response.errorMessage == 'Wrong password.'
+    And print ' ERROR POR CREDENCIALES '
     And print 'Respuesta de credenciales incorrectas: ', response
